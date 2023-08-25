@@ -1,0 +1,24 @@
+# 
+**/.git
+**/.github
+**/.tox
+**/.vscode
+**/.idea
+**/.coverage
+**/.DS_Store
+**/*.bak
+**/*.db
+**/*.sqllite
+**/*.swp
+**/node_modules/
+
+# local dirs
+**/test/
+**/infra/
+Makefile
+
+#
+README.md
+Dockerfile
+Dockerfile.dev
+docker-compose.yml

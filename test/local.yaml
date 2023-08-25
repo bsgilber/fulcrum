@@ -1,0 +1,16 @@
+project:
+    id: fulcrum
+    region: us-central1
+
+server:
+  port: 8080
+
+logging:
+  level: "debug"
+
+redis:
+  host: "redis://localhost"
+  port: 6379
+
+psql:
+    uri: "postgres://postgres:password@psql/postgres"

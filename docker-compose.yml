@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  psql:
+    image: debezium/postgres:13
+    ports:
+        - 5432:5432
+    expose:
+        - 5432
+    environment:
+        - POSTGRES_DB=postgres
+        - POSTGRES_PASSWORD=password
+  redis:
+    image: 'bitnami/redis:latest'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - 6379:6379
+    expose:
+      - 6379   
+  fulcrum:
+    image: 'fulcrum:local'
+    command: ["./wait-for-service.sh", "psql:5432", "--", "./main"]
+    environment:
+      - ENVIRONMENT=local
+    ports:
+      - 8080:8080
+    expose:
+      - 8080
+    depends_on:
+        - "psql"
+        - "redis"
+    links:
+        - "psql"
+        - "redis"
