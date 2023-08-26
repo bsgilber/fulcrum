@@ -1,8 +1,41 @@
 version: "3.9"
 
 services:
+  jaeger:
+    container_name: jaeger
+    pull_policy: if_not_present
+    restart: on-failure
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "16686:16686"
+      - "14268:14268"
+      - "14250:14250"
+  zipkin:
+    image: openzipkin/zipkin:latest
+    pull_policy: if_not_present
+    restart: on-failure
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib-dev:latest
+    pull_policy: if_not_present
+    command: ["--config=/etc/otel-collector-config.yaml", ""]
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    ports:
+      - "1888:1888"   # pprof extension
+      - "8888:8888"   # Prometheus metrics exposed by the collector
+      - "8889:8889"   # Prometheus exporter metrics
+      - "13133:13133" # health_check extension
+      - "4317:4317"   # OTLP gRPC receiver
+      - "55679:55679" # zpages extension
+    depends_on:
+      - jaeger
+      - zipkin
   psql:
-    image: debezium/postgres:13
+    image: postgres:latest
+    pull_policy: if_not_present
     ports:
         - 5432:5432
     expose:
